@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jet.module.UserManage.dao.UserDao">
+    <!-- 1.命名空间是唯一的，根据你的Dao接口来定制的，Select标签的id对应我们的方法上的函数名称-->
+    <!-- 这里的#{id},相当于传递进来的参数，你可以想象成map中的一个key,或者一个JavaBean中的对应的属性名称-->
+    <select id="findById" parameterType="int" resultType="User">
+       select id,userName as name,userAge as age,userAddress as address from `user` where id = #{id}
+    </select>
+</mapper>
