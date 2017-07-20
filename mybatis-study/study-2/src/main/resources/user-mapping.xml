@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jet.module.UserManage.dao.UserDao">
+    <!-- 1.命名空间是唯一的，根据你的Dao接口来定制的，Select标签的id对应我们的方法上的函数名称-->
+    <!-- 这里的#{id},相当于传递进来的参数，你可以想象成map中的一个key,或者一个JavaBean中的对应的属性名称-->
+    <select id="findById" parameterType="int" resultType="User">
+       select id,userName as name,userAge as age,userAddress as address from `user` where id = #{id}
+    </select>
+    <resultMap id="listUser" type="User"><!--type对应我们list中的实体，或者就是一个JavaBean-->
+        <id column="id" property="id" /><!--column不是我们数据库中的字段名称，而是查找出来之后对应的字段的信息-->
+        <result column="name" property="name" />
+        <result column="age" property="age" />
+        <result column="address" property="address" />
+    </resultMap>
+    <!--resultMap 很强大，这里只是返回了一个List的数据而已-->
+    <select id="findAll" resultMap="listUser" >
+         select id,userName as name,userAge as age,userAddress as address from user
+    </select>
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="id" >
+        INSERT  INTO  USER(userName,userAge,userAddress) VALUES
+        (#{name},#{age},#{address}  )
+    </insert>
+    <!--这里的inser into后面的 user(userName,userAge,userAddress)重复的使用,mybatis中提供了重构的-->
+    <sql id="insertUserColumn">
+         USER(userName,userAge,userAddress)
+    </sql>
+    <!--所有的属性都必须在一行中书写完成哦-->
+    <insert id="addUsers" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT  INTO <include refid="insertUserColumn"></include> VALUES
+        <foreach collection="list" item="item" index="index" separator=",">/*这里的分割符是插入之后的分割符*/
+            (#{item.name},#{item.age},#{item.address})
+        </foreach>
+        /*(wangji,1,'zunyi'),(wangji,1,'zunyi') 动态SQl的强大之处*/
+    </insert>
+
+    <delete id="deleteById" parameterType="int" >
+        DELETE  FROM USER  WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="java.util.List" >
+        DELETE  FROM USER  WHERE id in 
+         /*open 和close就是构建的时候需要括号包起来这个sql语句*/
+        <foreach collection="list" separator="," index="index" open="(" close=")" item="item">
+            #{item}/*这里的list中就是一个包装Integer，所以就是这个自己本身*/
+        </foreach>
+    </delete>
+    <!--http://blog.csdn.net/u013083576/article/details/51577954 这种写法-->
+    <delete id="deleteByArrayIds" parameterType="int[]" >
+        DELETE  FROM USER  WHERE id in
+        <foreach collection="array" separator="," index="index" open="(" close=")" item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByMapIds" parameterType="java.util.Map">
+         DELETE  FROM USER  WHERE id in
+        /*这里的ids是放置在Map中的键，值可能是数组或者List*/
+         <foreach collection="ids" separator="," index="index" open="(" close=")" item="item">
+             #{item}
+         </foreach>
+    </delete>
+
+
+
+</mapper>
