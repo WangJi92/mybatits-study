@@ -1,0 +1,79 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+
+    <!-- 配置数据源，使用dbcp -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" init-method="init">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="10"/>
+    </bean>
+
+    <!--MyBatis factory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--mybatis的某些配置项,最原始的，可以不需要-->
+        <!--<property name="configLocation" value="mybatis-config.xml"></property>-->
+        <!--它表示我们的Mapper.xml文件存放的位置-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!-- 它一般对应我们的实体类所在的包，这个时候会自动取对应包中不包括包名的简单类名作为包括包名的别名。
+            多个package之间可以用逗号或者分号等来进行分隔。(value的值一定要是包的全名)@Alias别名-->
+        <property name="typeAliasesPackage" value="com.jet"/>
+    </bean>
+    <!--mapper 自动映射，将接口注入到Spring-Ioc容器中, 配置sqlSessionFactoryBeanName属性 决定优先加载 sqlSessionFactory-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描包时候使用了这个注解才被认为是mapper -->
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"></property>
+        <!-- 扫描包的路径,如果要扫描多个包,中间使用逗号隔开 -->
+        <property name="basePackage" value="com.jet.module"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    <!-- SqlSession模板类实例 -->
+    <bean id="sessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" >
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- 通知 -->
+    <tx:advice transaction-manager="transactionManager" id="txAdvice">
+        <tx:attributes>
+            <!-- 传播行为 -->
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+<!--    
+    PROPAGATION_REQUIRED;支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。
+    PROPAGATION_SUPPORTS;支持当前事务，如果当前没有事务，就以非事务方式执行。
+    PROPAGATION_MANDATORY;支持当前事务，如果当前没有事务，就抛出异常。
+    PROPAGATION_REQUIRES_NEW;新建事务，如果当前存在事务，把当前事务挂起。
+    PROPAGATION_NOT_SUPPORTED;以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。
+    PROPAGATION_NEVER;以非事务方式执行，如果当前存在事务，则抛出异常。
+    PROPAGATION_NESTED;如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED类似的操作。-->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.jet.module..service..*.*.*(..))"/>
+    </aop:config>
+</beans>
