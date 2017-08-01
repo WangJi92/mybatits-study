@@ -27,4 +27,10 @@ public class UserInfoAction {
         result.setData(userInfoService.getUserInfoById(id));
         return result;
     }
+    @RequestMapping("/error")
+    @ResponseBody
+    public void getUser()throws Exception{
+        ActionResult result = new ActionResult();
+        throw new Exception("eee");
+    }
 }

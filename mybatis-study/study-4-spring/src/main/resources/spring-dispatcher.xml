@@ -51,5 +51,6 @@
         </property>
         <property name="defaultEncoding" value="utf-8"></property>
     </bean>
+    <bean  class="com.common.utils.GlobalHandlerExceptionResolver"></bean>
 
 </beans>
