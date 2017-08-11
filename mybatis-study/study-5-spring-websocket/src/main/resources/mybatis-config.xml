@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>
+    <typeAlias alias="User" type="com.jet.module.UserManage.entity.User"/><!--别名简单的认识-->
+</typeAliases>
+<environments default="development">
+    <environment id="development">
+        <transactionManager type="JDBC"/>
+        <dataSource type="POOLED">
+            <property name="driver" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://127.0.0.1:3306/mybatis"/>
+            <property name="username" value="root"/>
+            <property name="password" value="root"/>
+        </dataSource>
+    </environment>
+</environments>
+<mappers>
+    <!--查找映射文件信息-->
+    <mapper resource="user-mapping.xml"/>
+</mappers>
+</configuration>
+<!-- mybatis中的配置文件可以放置在这里也可以不需要哦，spring中可以去配置的-->
