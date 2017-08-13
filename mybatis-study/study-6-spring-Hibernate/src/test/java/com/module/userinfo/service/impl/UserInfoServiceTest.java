@@ -20,5 +20,10 @@ public class UserInfoServiceTest extends JUnitServiceBase{
         User user = iUserInfoService.getUserInfoById(1);
         log.info(user!=null?user.toString():"null");
     }
+    @Test
+    public void getDo() throws Exception {
+        iUserInfoService.doS(new User());
+
+    }
 
 }

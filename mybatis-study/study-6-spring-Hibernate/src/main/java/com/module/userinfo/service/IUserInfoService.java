@@ -9,5 +9,6 @@ import com.module.userinfo.entity.User;
  */
 public interface IUserInfoService {
     User getUserInfoById(Integer id);
+    void doS(User u);
 
 }
