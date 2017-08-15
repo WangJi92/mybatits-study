@@ -27,7 +27,7 @@
     </bean>
 
     <!--启动注解功能 注册请求url和注解POJO类方法的映射并设置@ResponseBody返回中文乱码问题-->
-    <mvc:annotation-driven>
+    <mvc:annotation-driven validator="global-validator">
         <mvc:message-converters register-defaults="true">
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />

@@ -44,7 +44,7 @@ public class ValidateParamUseAop {
     }
 
 
-    @Pointcut("@annotation(com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam)")
+    @Pointcut("@within(com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam)||@annotation(com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam)")
     public void pointcut() {}
 
     @Before("pointcut()")
@@ -91,10 +91,9 @@ public class ValidateParamUseAop {
             for(ConstraintViolation item :validResult){
                 //获取参数路径的信息(参数的位置，参数的名称等等)
                 PathImpl path = (PathImpl)item.getPropertyPath();
-                int paramIndex = path.getLeafNode().getIndex();
-                String paramName = path.toString();//获取方式1
-                String paramName_two = parameterNames[paramIndex];//获取方式2
-                FieldError fieldError = new FieldError("",paramName,item.getMessage());
+                int paramIndex = path.getLeafNode().getParameterIndex();
+                String parameterName = parameterNames[paramIndex];
+                FieldError fieldError = new FieldError("",parameterName,item.getMessage());
                 errors.add(fieldError);
             }
             throw new ParamValidException(errors);
