@@ -149,13 +149,16 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
+       <!-- <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.1</version>
             <scope>provided</scope>
-        </dependency>
-
+        </dependency>-->
+<!--
+        https://stackoverflow.com/questions/42718869/hibernate-validation-unable-to-initialize-javax-el-expressionfactory-error
+-->
+       <!--如果不删除这个，Hibernate 无法进行测试，由于这里有低版本EL的实现-->
 
         <!--druid-->
         <dependency>
@@ -251,16 +254,11 @@
             <version>5.4.0.Final</version>
         </dependency>
         <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>javax.el</artifactId>
             <version>2.2.6</version>
         </dependency>
+
         <!--这个是Hibernate的验证器，tomact (el表达式的支持)以上是提供了的 java.lang.NoSuchMethodError: javax.el.ExpressionFactory.newInstance()Ljavax/el/ExpressionFactory;-->
 
 
