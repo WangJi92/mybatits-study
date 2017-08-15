@@ -1,6 +1,9 @@
 package com.module.userinfo.entity;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -13,10 +16,13 @@ public class User implements Serializable {
     private int id;
 
     @Column(name ="userName")
+    @NotBlank(message = "用户名不能为空")
     private String name;
     @Column(name ="userAge")
     private Integer age;
+
     @Column(name ="userAddress")
+    @NotNull(message="地址不能为空")
     private String address;
 
     public int getId() {

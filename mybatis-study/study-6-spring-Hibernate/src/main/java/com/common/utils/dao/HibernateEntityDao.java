@@ -28,6 +28,7 @@ public class HibernateEntityDao<T> extends HibernateDaoSupport {
     }
     public void update(T object){
         getHibernateTemplate().save(object);
+        getHibernateTemplate().flush();
     }
     public T findById(Serializable id){
         return getHibernateTemplate().get(this.entityClass,id);

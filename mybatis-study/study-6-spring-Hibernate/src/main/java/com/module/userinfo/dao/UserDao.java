@@ -14,7 +14,11 @@ public class UserDao extends HibernateEntityDao<User>{
 
 
     public User findById(Integer id){
-     return super.findById(1);
+     return super.findById(id);
+    }
+
+    public void save(User u){
+        super.update(u);
     }
 
 

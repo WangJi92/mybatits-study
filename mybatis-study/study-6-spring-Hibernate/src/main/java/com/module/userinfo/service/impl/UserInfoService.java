@@ -1,13 +1,14 @@
 package com.module.userinfo.service.impl;
 
-import com.common.utils.Hibernatevalidatedemo.aop.doAction;
+import com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam;
 import com.module.userinfo.dao.UserDao;
 import com.module.userinfo.entity.User;
 import com.module.userinfo.service.IUserInfoService;
-import com.sun.xml.internal.ws.api.message.ExceptionHasMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+
 
 /**
  * descrption:简单的实现服务类
@@ -15,20 +16,20 @@ import javax.annotation.Resource;
  * date: 2017-07-31 18:00
  */
 @Service
-@doAction()
+@Slf4j
 public class UserInfoService implements IUserInfoService {
+
 
     @Resource
     private UserDao userDao;
 
-
+    @TestValidateParam
     public User getUserInfoById(Integer id) {
         return userDao.findById(id);
     }
 
-    @Override
-    @doAction(doSome = "test")
-    public void doS(User u) {
-        throw new RuntimeException("xxx");
+    public void save(User user) {
+        userDao.save(user);
     }
+
 }
