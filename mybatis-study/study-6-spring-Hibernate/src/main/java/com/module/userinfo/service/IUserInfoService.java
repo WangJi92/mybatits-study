@@ -3,6 +3,7 @@ package com.module.userinfo.service;
 import com.module.userinfo.entity.User;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * descrption:
@@ -16,4 +17,5 @@ public interface IUserInfoService {
 
     void save(@NotNull(message = "不能为空") User user);
 
+     List<User> findAll();
 }

@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * Created by wangji on 2017/8/11.
  */
@@ -21,9 +23,11 @@ public class UserInfoServiceTest extends JUnitServiceBase{
         log.info(user!=null?user.toString():"null");
     }
     @Test
-    public void getDo() throws Exception {
-        iUserInfoService.doS(new User());
-
+    public void Test1(){
+        List<User> users = iUserInfoService.findAll();
+        for(User user:users){
+            log.info(user.toString());
+        }
     }
 
 }

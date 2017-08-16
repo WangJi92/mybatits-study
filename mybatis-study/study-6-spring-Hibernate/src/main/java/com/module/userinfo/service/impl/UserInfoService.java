@@ -1,13 +1,16 @@
 package com.module.userinfo.service.impl;
 
 import com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam;
+import com.common.utils.dao.CommonHibernateDao;
 import com.module.userinfo.dao.UserDao;
 import com.module.userinfo.entity.User;
 import com.module.userinfo.service.IUserInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -22,6 +25,8 @@ public class UserInfoService implements IUserInfoService {
 
     @Resource
     private UserDao userDao;
+    @Autowired
+    private CommonHibernateDao commonDao;
 
     @TestValidateParam
     public User getUserInfoById(Integer id) {
@@ -30,6 +35,12 @@ public class UserInfoService implements IUserInfoService {
 
     public void save(User user) {
         userDao.save(user);
+    }
+
+    public List<User> findAll(){
+        String sql = "select u.userName as name,u.userAge as age,u.userAddress as address,u.id from user u";
+        List<User> list =commonDao.findListBySQL(sql,User.class);
+        return list;
     }
 
 }
