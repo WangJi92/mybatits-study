@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+
+    <!-- proxy-target-class默认"false",更改为"ture"使用CGLib动态代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!-- 采用注释的方式配置bean,当配置扫描包的时候，可以省去配置这个context:annotation-config -->
+    <!--<context:annotation-config />-->
+    <!-- 组件扫描 -->
+    <context:component-scan base-package="com.common.utils,com.module"><!--让spring IOC 不扫描指定注解-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+    <!-- 加载数据库配置文件 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <import resource="spring-hibernate.xml"></import>
+      <!--  bean级别的校验 方法中的参数bean必须添加@Valid注解，后面紧跟着BindingResult result参数-->
+    <bean id="global-validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"></bean>
+      <!--  方法级别的校验  要校验的方法所在类必须添加@Validated注解-->
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
+     <!--可以引用自己的 validator 配置，在本文中（下面）可以找到 validator 的参考配置，如果不指定则系统使用默认的 -->
+
+</beans>
