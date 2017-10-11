@@ -1,0 +1,39 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+
+    <!-- 使用Spring的任务调度类ScheduledExecutorTask，将ScheduledExecutorService三种不同的执行函数封装起来形成一种函数进行执行-->
+    <bean id="startupScheduledTask" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
+       <!--  ScheduledExecutorService scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) 如果任务的执行时间大于period，则会按任务的实际执行时间进行周期执行-->
+       <!--  ScheduledExecutorService scheduleWithFixedDelay(Runnable command, long initialDelay, long delay,TimeUnit unit)-->
+       <!-- 如果fixedRate为true代表以固定的频率执行代码，依旧是第一个方法，周期性的-->
+        <property name="fixedRate" value="false"></property>
+        <property name="delay" value="3000" /><!--多久开始执行-->
+        <!-- 每次任务间隔0秒 0表示只执行一次  相当于这个方法 ScheduledExecutorService schedule(Runnable command, long delay, TimeUnit unit)，schedule方法被用来延迟指定时间后执行某个指定任务。-->
+        <!--period，相当于代码中的peroid或者delay-->
+        <property name="period" value="3000" />
+        <!-- 配置主任务 -->
+        <property name="runnable">
+            <bean class="com.common.utils.ScheduledExecutor.StartupTask"></bean>
+        </property>
+    </bean>
+    <bean id="timerFactory" class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+        <property name="scheduledExecutorTasks">
+            <list>
+                <ref bean="startupScheduledTask" />
+                <!-- 如有多任务，可以将任务bean放到list中 -->
+            </list>
+        </property>
+        <property name="continueScheduledExecutionAfterException" value="true"></property><!--抛出异常继续执行？-->
+        <property name="poolSize" value="2"></property><!--线程池的大小-->
+    </bean>
+</beans>
