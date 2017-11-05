@@ -1,6 +1,8 @@
 package com.module.userinfo.service.impl;
 
 import com.common.utils.Hibernatevalidatedemo.ValidateParameter.TestValidateParam;
+import com.common.utils.RedisCache.annotation.RedisCache;
+import com.common.utils.RedisCache.annotation.RedisEvit;
 import com.common.utils.dao.CommonHibernateDao;
 import com.module.userinfo.dao.UserDao;
 import com.module.userinfo.entity.User;
@@ -29,6 +31,7 @@ public class UserInfoService implements IUserInfoService {
     private CommonHibernateDao commonDao;
 
     @TestValidateParam
+    @RedisCache(type = User.class)
     public User getUserInfoById(Integer id) {
         return userDao.findById(id);
     }
@@ -37,6 +40,7 @@ public class UserInfoService implements IUserInfoService {
         userDao.save(user);
     }
 
+    @RedisCache(type = User.class)
     public List<User> findAll(){
         String sql = "select u.userName as name,u.userAge as age,u.userAddress as address,u.id from user u";
         List<User> list =commonDao.findListBySQL(sql,User.class);

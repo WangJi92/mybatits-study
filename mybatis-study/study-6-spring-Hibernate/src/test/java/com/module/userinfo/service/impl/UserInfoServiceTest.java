@@ -21,6 +21,8 @@ public class UserInfoServiceTest extends JUnitServiceBase{
     public void getUserInfoById() throws Exception {
         User user = iUserInfoService.getUserInfoById(1);
         log.info(user!=null?user.toString():"null");
+        User user1 = iUserInfoService.getUserInfoById(1);
+        log.info(user1!=null?user.toString():"null");
     }
     @Test
     public void Test1(){
@@ -28,6 +30,13 @@ public class UserInfoServiceTest extends JUnitServiceBase{
         for(User user:users){
             log.info(user.toString());
         }
+
+        List<User> users1 = iUserInfoService.findAll();
+        for(User user:users1){
+            log.info(user.toString());
+        }
+
+
     }
 
 }

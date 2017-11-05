@@ -24,6 +24,7 @@
     <context:property-placeholder location="classpath:db.properties"/>
 
     <import resource="spring-hibernate.xml"></import>
+    <import resource="spring-redis.xml"></import>
       <!--  bean级别的校验 方法中的参数bean必须添加@Valid注解，后面紧跟着BindingResult result参数-->
     <bean id="global-validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"></bean>
       <!--  方法级别的校验  要校验的方法所在类必须添加@Validated注解-->
